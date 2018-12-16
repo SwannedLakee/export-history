@@ -1,59 +1,42 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import urlparse
 import sqlite3
 import datetime
+import urllib
 
+# Todo
+# (A) Put up for code review 
 
-def get_cursor(url):
-    return sqlite3.connect(url).cursor()
-
-
-def get_all():
-    cursor = sqlite3.connect('/Users/josephreddington/Library/Application Support/Firefox/Profiles/datm9h3r.default-1541155689776/places.sqlite').cursor()
-    cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id''')
+def get_history_from_database(filename, browser):
+    cursor = sqlite3.connect(filename).cursor()
+    if browser == "firefox": 
+        cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id''')
+    elif browser == "safari":
+        cursor.execute("SELECT datetime(visit_time + 978307200, 'unixepoch', 'localtime') AS human_readable_time, url, title FROM history_visits INNER JOIN history_items ON history_items.id = history_visits.history_item;")
+    else: 
+        raise ValueError("Only supports 'firefox' or 'safari' as the browser argument")
     return cursor.fetchall()
 
-
 def filter_by_date(matches, text):
-    return_me=[]
-    for row in matches:
-        if text in str(row[0]):
-            return_me.append(row)
-    return return_me
-            
+    return [x for x in matches if str(text) in str(x[0])]
 
-def privacy_morph(row, text,newtext=None):
-    if newtext==None:
-        newtext=text
-    if text in row[1]:
-        return (row[0], newtext)
-    else:
-        return row
+def domain_filter(matches):
+    return [(row[0],urlparse.urlparse(row[1])[1]) for row in matches]
 
-
-
-def privacy_filter(matches):
-    return_me=[]
-    for row in matches: 
-            newrow=row
-            newrow=privacy_morph(newrow,"https://www.linkedin.com")
-            newrow=privacy_morph(newrow,"http://designs.theopenvoicefactory.org")
-            newrow=privacy_morph(newrow,"https://www.facebook.com")
-            newrow=privacy_morph(newrow,"https://www.dropbox.com")
-            newrow=privacy_morph(newrow,"https://accounts.google.com")
-            newrow=privacy_morph(newrow,"https://mail.google.com")
-            return_me.append(newrow)
-    
-    return return_me
+def writelist(data,name,html_file):
+            html_file.write("<H3>"+name+"<H3>\n<ul>")
+            for row in domain_filter(data):
+                outstring="<li> "+row[0][11:-3]+" "+row[1]+"\n"
+                html_file.write(outstring)
+            html_file.write("</ul>")
 
 if __name__=="__main__":
-    with open("index.html","w") as html_file:
-        number_of_days_to_go_back=10
-        for i in range(number_of_days_to_go_back+1):
-                date= str(datetime.date.today()-datetime.timedelta(number_of_days_to_go_back-i))
-                html_file.write("<H2>{}<H2><br>".format(date))
-                html_file.write("<ul>")
-                for row in filter_by_date(privacy_filter(get_all()),date):
-                    html_file.write("<li> {}, {}".format(row[0][11:-3],row[1]))
-                html_file.write("</ul>")
-
-
-
+    firefox_data=sorted(get_history_from_database('firefox.sqlite','firefox'))
+    safari_data=sorted(get_history_from_database('safari.db','safari'))
+    with open("history.html","w") as html_file:
+        startdate=datetime.date(2018,12,10)
+        for i in range((datetime.date.today()-startdate).days+1):
+                html_file.write("<H2>{}<H2>".format(startdate+datetime.timedelta(i)))
+                writelist(filter_by_date(firefox_data, startdate+datetime.timedelta(i)),"Firefox",html_file)
+                writelist(filter_by_date(safari_data,startdate+datetime.timedelta(i)),"Safari (almost all iPhone)",html_file)
