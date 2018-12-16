@@ -22,7 +22,16 @@ def filter_by_date(matches, text):
     return [x for x in matches if str(text) in str(x[0])]
 
 def domain_filter(matches):
-    return [(row[0],urlparse.urlparse(row[1])[1]) for row in matches]
+    return_me=[]
+    whitelist=open('whitelist.txt').read().split("\n")
+    for row in matches:
+	domain=urlparse.urlparse(row[1])[1]
+	if domain not in whitelist:	
+	    return_me.append((row[0],domain))
+	else:
+	    return_me.append(row)
+		
+    return return_me
 
 def writelist(data,name,html_file):
             html_file.write("<H3>"+name+"<H3>\n<ul>")
