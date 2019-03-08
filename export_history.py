@@ -30,6 +30,7 @@ def domain_filter(matches):
 	    return_me.append((row[0],domain))
 	else:
 	    return_me.append(row)
+            print row
 		
     return return_me
 
