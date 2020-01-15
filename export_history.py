@@ -55,4 +55,4 @@ if __name__=="__main__":
         for i in reversed(range((datetime.date.today()-startdate).days+1)):
                 html_file.write("<H2>{}<H2>".format(startdate+datetime.timedelta(i)))
                 writelist(filter_by_date(firefox_data, startdate+datetime.timedelta(i)),"Firefox",html_file)
-                writelist(filter_by_date(safari_data,startdate+datetime.timedelta(i)),"Safari (almost all iPhone)",html_file)
+#                writelist(filter_by_date(safari_data,startdate+datetime.timedelta(i)),"Safari (almost all iPhone)",html_file)
