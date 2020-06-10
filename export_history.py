@@ -35,11 +35,35 @@ def domain_filter(matches):
 
 	    return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
             print row
+
+    return_me2=[]
+    last_row=["a","b"]
+    for row in return_me: 
+        print "{} {}".format( row[0][:16] , last_row[0][:16])
+        if row[0][:16] == last_row[0][:16]:
+            if row[1] == last_row[1]:
+                print row 
+                continue 
+        return_me2.append(row)
+        last_row=row
 		
-    return return_me
+    return return_me2
+
+from collections import Counter
+
+def Most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
+    data = Counter(lst)
+    return_me="<h3> Most common sites</h3>\nWith number of accesses/minutes in parentheses<ol>"
+    for row in data.most_common():
+        return_me+="<li>{} ({})</li>\n".format(row[0],row[1])
+    return return_me+"</ol>"
+
 
 def writelist(data,name,html_file):
-            html_file.write("<H3>"+name+"<H3>\n<ul>")
+            #html_file.write("<H3>"+name+"<H3>\n<ul>")
+            common_domains=[row[1] for row in domain_filter(data)]
+            html_file.write(Most_Common(common_domains))
+            html_file.write("<H3> Sites and times</H3>")
             for row in domain_filter(data):
                 outstring="<li> "+row[0][11:-3]+" "+row[1]+"\n"
                 print outstring

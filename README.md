@@ -8,8 +8,8 @@ There is a [blog post](http://joereddington.com/6530/2018/12/12/experimenting-wi
 Currently all urls are stripped down to their domain name unless they appear on 'whitelist.txt' 
 
 ## TODO 
+* Have light clustering (the same domain inthe same minute shouldn't occur) 
 * Allow wildcards in whitelist 
-* Clear up previous blog posts and joereddington.com/history.html
 * Make the whitelisted urls into clickable links
 * Add some css
 * Whitelist google from certain dates
