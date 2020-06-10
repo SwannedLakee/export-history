@@ -13,3 +13,5 @@ Currently all urls are stripped down to their domain name unless they appear on 
 * Make the whitelisted urls into clickable links
 * Add some css
 * Whitelist google from certain dates
+* Reverse the order of entries 
+* Add comments
