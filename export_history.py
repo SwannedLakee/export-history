@@ -18,6 +18,7 @@ def get_history_from_database(filename, browser):
         raise ValueError("Only supports 'firefox' or 'safari' as the browser argument")
     return cursor.fetchall()
 
+
 def filter_by_date(matches, text):
     return [x for x in matches if str(text) in str(x[0])]
 
@@ -65,10 +66,26 @@ def writelist(data,name,html_file):
             html_file.write(Most_Common(common_domains))
             html_file.write("<H3> Sites and times</H3>")
             for row in domain_filter(data):
-                outstring="<li> "+row[0][11:-3]+" "+row[1]+"\n"
+		print row 
+		time=convert_to_time_zone(row[0])
+                time_string=time.strftime("%H:%M")
+                outstring="<li> "+time_string+" "+row[1]+"\n"
                 print outstring
                 html_file.write(outstring)
             html_file.write("</ul>")
+
+
+def convert_to_time_zone(time,zone='Europe/London'): 
+#convert_to_time_zone("2020-07-25 20:19:07","London") 
+    from datetime import datetime
+    import pytz
+    date = datetime.strptime(time, '%Y-%m-%d %H:%M:%S')
+    date = pytz.utc.localize(date)
+    return  date.astimezone(pytz.timezone(zone))
+
+
+
+
 
 if __name__=="__main__":
     firefox_data=sorted(get_history_from_database('databases/firefox.sqlite','firefox'))
