@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import urlparse
+import urllib.parse
 import sqlite3
 import datetime
-import urllib
+import urllib.request, urllib.parse, urllib.error
+from collections import Counter
 
 # Todo
 # (A) Put up for code eview 
@@ -26,31 +27,30 @@ def domain_filter(matches):
     return_me=[]
     whitelist=open('whitelist.txt').read().split("\n")
     for row in matches:
-	domain=urlparse.urlparse(row[1])[1]
-	if domain not in whitelist:	
-	    return_me.append((row[0],domain))
-	else:
+        domain=urllib.parse.urlparse(row[1])[1]
+    if domain not in whitelist: 
+        return_me.append((row[0],domain))
+    else:
             ascii_title=""
             if row[2]:
                 ascii_title = row[2].encode('ascii','ignore')
 
-	    return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
-            print row
+            return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
+            print(row)
 
     return_me2=[]
     last_row=["a","b"]
     for row in return_me: 
-        print "{} {}".format( row[0][:16] , last_row[0][:16])
+        print("{} {}".format( row[0][:16] , last_row[0][:16]))
         if row[0][:16] == last_row[0][:16]:
             if row[1] == last_row[1]:
-                print row 
+                print(row) 
                 continue 
         return_me2.append(row)
         last_row=row
-		
+        
     return return_me2
 
-from collections import Counter
 
 def Most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
     data = Counter(lst)
@@ -66,11 +66,11 @@ def writelist(data,name,html_file):
             html_file.write(Most_Common(common_domains))
             html_file.write("<H3> Sites and times</H3>")
             for row in domain_filter(data):
-		print row 
-		time=convert_to_time_zone(row[0])
+                print(row) 
+                time=convert_to_time_zone(row[0])
                 time_string=time.strftime("%H:%M")
                 outstring="<li> "+time_string+" "+row[1]+"\n"
-                print outstring
+                print(outstring)
                 html_file.write(outstring)
             html_file.write("</ul>")
 
@@ -93,7 +93,7 @@ if __name__=="__main__":
 #sorted(get_history_from_database('databases/safari.db','safari'))
     with open("history.html","w") as html_file:
         startdate=datetime.date(2018,12,10)
-        for i in reversed(range((datetime.date.today()-startdate).days+1)):
+        for i in reversed(list(range((datetime.date.today()-startdate).days+1))):
                 html_file.write("<H2>{}<H2>".format(startdate+datetime.timedelta(i)))
                 writelist(filter_by_date(firefox_data, startdate+datetime.timedelta(i)),"Firefox",html_file)
 #                writelist(filter_by_date(safari_data,startdate+datetime.timedelta(i)),"Safari (almost all iPhone)",html_file)
