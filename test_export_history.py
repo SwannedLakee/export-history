@@ -13,5 +13,10 @@ class historyTest(unittest.TestCase):
         print(data[1])
         self.assertTrue("14:52" in data[1][0])
 
+    def test_first_milseconds(self):
+        data=sorted(export_history.get_history_from_database('databases/firefox.sqlite','firefox'))
+        print(data[1])
+        self.assertEqual(1482159174330000,data[1][3])
+
 if __name__=="__main__":
     unittest.main()
