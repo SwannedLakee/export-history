@@ -9,10 +9,14 @@ from collections import Counter
 # Todo
 # (A) Put up for code eview 
 
-def get_history_from_database(filename, browser):
+def get_history_from_database(filename, browser, epoch=0):
     cursor = sqlite3.connect(filename).cursor()
     if browser == "firefox": 
-        cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id''')
+        if epoch==0:
+            cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id''')
+        else:  
+            print('doing it')
+            cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id and visit_date>{}'''.format(epoch))
     elif browser == "safari":
         cursor.execute("SELECT datetime(visit_time + 978307200, 'unixepoch', 'localtime') AS human_readable_time, url, title FROM history_visits INNER JOIN history_items ON history_items.id = history_visits.history_item;")
     else: 

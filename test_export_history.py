@@ -18,5 +18,10 @@ class historyTest(unittest.TestCase):
         print(data[1])
         self.assertEqual(1482159174330000,data[1][3])
 
+    def test_todays_internet(self):
+        data=export_history.get_history_from_database('databases/firefox.sqlite','firefox', 1614334237000000)
+        for record in data:
+            print(record)
+
 if __name__=="__main__":
     unittest.main()
