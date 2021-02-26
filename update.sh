@@ -4,6 +4,6 @@ cd "$(dirname "$0")"
 echo "We are here in history"
 echo "We are here in history">log.txt
 
-python export_history.py
+python3 export_history.py
 
 rm *-shm *-wal

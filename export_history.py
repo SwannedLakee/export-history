@@ -20,7 +20,7 @@ def get_history_from_database(filename, browser):
     return cursor.fetchall()
 
 
-def filter_by_date(matches, text):
+def filter_by_date(matches, text): 
     return [x for x in matches if str(text) in str(x[0])]
 
 def domain_filter(matches):
@@ -28,15 +28,15 @@ def domain_filter(matches):
     whitelist=open('whitelist.txt').read().split("\n")
     for row in matches:
         domain=urllib.parse.urlparse(row[1])[1]
-    if domain not in whitelist: 
-        return_me.append((row[0],domain))
-    else:
-            ascii_title=""
-            if row[2]:
-                ascii_title = row[2].encode('ascii','ignore')
+        if domain not in whitelist: 
+            return_me.append((row[0],domain))
+        else:
+                ascii_title=""
+                if row[2]:
+                    ascii_title = row[2].encode('ascii','ignore')
 
-            return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
-            print(row)
+                return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
+                print(row)
 
     return_me2=[]
     last_row=["a","b"]
@@ -84,16 +84,13 @@ def convert_to_time_zone(time,zone='Europe/London'):
     return  date.astimezone(pytz.timezone(zone))
 
 
+def get_data_from_database():
+    return sorted(get_history_from_database('databases/firefox.sqlite','firefox'))
 
-
+def output_data(data):
+    with open("history.html","w") as html_file:
+        writelist(data,"", html_file)
 
 if __name__=="__main__":
-    firefox_data=sorted(get_history_from_database('databases/firefox.sqlite','firefox'))
-    safari_data={} 
-#sorted(get_history_from_database('databases/safari.db','safari'))
-    with open("history.html","w") as html_file:
-        startdate=datetime.date(2018,12,10)
-        for i in reversed(list(range((datetime.date.today()-startdate).days+1))):
-                html_file.write("<H2>{}<H2>".format(startdate+datetime.timedelta(i)))
-                writelist(filter_by_date(firefox_data, startdate+datetime.timedelta(i)),"Firefox",html_file)
-#                writelist(filter_by_date(safari_data,startdate+datetime.timedelta(i)),"Safari (almost all iPhone)",html_file)
+    firefox_data=get_data_from_database()
+    output_data(firefox_data)
