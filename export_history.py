@@ -7,14 +7,13 @@ import urllib.request, urllib.parse, urllib.error
 from collections import Counter
 
 
-def get_history_from_database(filename, browser, epoch=0):
+def get_history_from_database(filename, browser="firefox", start=0,end=0):
     cursor = sqlite3.connect(filename).cursor()
     if browser == "firefox": 
-        if epoch==0:
+        if start==0:
             cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id''')
         else:  
-            print('doing it')
-            cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id and visit_date>{}'''.format(epoch))
+            cursor.execute('''SELECT datetime(moz_historyvisits.visit_date/1000000,'unixepoch'), moz_places.url, title , visit_date FROM moz_places, moz_historyvisits WHERE moz_places.id = moz_historyvisits.place_id and visit_date>{} and visit_date<{}'''.format(start,end))
     elif browser == "safari":
         cursor.execute("SELECT datetime(visit_time + 978307200, 'unixepoch', 'localtime') AS human_readable_time, url, title FROM history_visits INNER JOIN history_items ON history_items.id = history_visits.history_item;")
     else: 
@@ -25,12 +24,21 @@ def get_history_from_database(filename, browser, epoch=0):
 def filter_by_date(matches, text): 
     return [x for x in matches if str(text) in str(x[0])]
 
-def domain_filter(matches):
+def domain_filter(matches,use_blacklist=False):
     return_me=[]
     whitelist=open('whitelist.txt').read().split("\n")
+    blacklist=open('blacklist.txt').read().split("\n")
     for row in matches:
         domain=urllib.parse.urlparse(row[1])[1]
-        if domain not in whitelist: 
+        remove_path=True
+        if use_blacklist:
+           if domain not in blacklist:
+                remove_path=False 
+        else:
+            if domain in whitelist: 
+                remove_path=False 
+        
+        if remove_path:
             return_me.append((row[0],domain))
         else:
                 ascii_title=""
@@ -38,15 +46,12 @@ def domain_filter(matches):
                     ascii_title = row[2].encode('ascii','ignore')
 
                 return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
-                print(row)
 
     return_me2=[]
     last_row=["a","b"]
     for row in return_me: 
-        print("{} {}".format( row[0][:16] , last_row[0][:16]))
         if row[0][:16] == last_row[0][:16]:
             if row[1] == last_row[1]:
-                print(row) 
                 continue 
         return_me2.append(row)
         last_row=row
