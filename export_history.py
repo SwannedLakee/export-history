@@ -59,24 +59,11 @@ def domain_filter(matches):
 def Most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
     data = Counter(lst)
     return_me="<h3> Most common sites</h3>\nWith number of accesses/minutes in parentheses<ol>"
-    for row in data.most_common():
+    for row in data.most_common()[:30]:
         return_me+="<li>{} ({})</li>\n".format(row[0],row[1])
     return return_me+"</ol>"
 
 
-def writelist(data,name,html_file):
-            #html_file.write("<H3>"+name+"<H3>\n<ul>")
-            common_domains=[row[1] for row in domain_filter(data)]
-            html_file.write(Most_Common(common_domains))
-            html_file.write("<H3> Sites and times</H3>")
-            for row in domain_filter(data):
-                print(row) 
-                time=convert_to_time_zone(row[0])
-                time_string=time.strftime("%H:%M")
-                outstring="<li> "+time_string+" "+row[1]+"\n"
-                print(outstring)
-                html_file.write(outstring)
-            html_file.write("</ul>")
 
 
 def convert_to_time_zone(time,zone='Europe/London'): 
@@ -93,8 +80,25 @@ def get_data_from_database():
 
 def output_data(data):
     with open("history.html","w") as html_file:
-        writelist(data,"", html_file)
+        writelist(data, html_file)
+
+def writelist(data,html_file,name=""):
+            common_domains=[row[1] for row in domain_filter(data)]
+            html_file.write(Most_Common(common_domains))
+            html_file.write("<H3> Sites and times</H3>")
+            last_annouced_date_string="xxx"
+            for row in domain_filter(data):
+                time=convert_to_time_zone(row[0])
+                time_string=time.strftime("%H:%M")
+                date_string=time.strftime("%d/%m/%y")
+                if last_annouced_date_string not in date_string:
+                    html_file.write("<H3>{}</H3>".format(date_string))
+                    last_annouced_date_string=date_string 
+                print(date_string)
+                outstring="<li> "+date_string+" "+time_string+" "+row[1]+"\n"
+                print(outstring)
+                html_file.write(outstring)
+            html_file.write("</ul>")
 
 if __name__=="__main__":
-    firefox_data=get_data_from_database()
-    output_data(firefox_data)
+    output_data(get_data_from_database())
