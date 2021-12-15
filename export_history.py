@@ -6,8 +6,6 @@ import datetime
 import urllib.request, urllib.parse, urllib.error
 from collections import Counter
 
-# Todo
-# (A) Put up for code eview 
 
 def get_history_from_database(filename, browser, epoch=0):
     cursor = sqlite3.connect(filename).cursor()
@@ -95,7 +93,7 @@ def writelist(data,html_file,name=""):
                     html_file.write("<H3>{}</H3>".format(date_string))
                     last_annouced_date_string=date_string 
                 print(date_string)
-                outstring="<li> "+date_string+" "+time_string+" "+row[1]+"\n"
+                outstring="<li> "+time_string+" "+row[1]+"\n"
                 print(outstring)
                 html_file.write(outstring)
             html_file.write("</ul>")
