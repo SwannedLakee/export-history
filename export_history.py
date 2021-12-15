@@ -84,9 +84,6 @@ def convert_to_time_zone(time,zone='Europe/London'):
     return  date.astimezone(pytz.timezone(zone))
 
 
-
-
-
 if __name__=="__main__":
     firefox_data=sorted(get_history_from_database('databases/firefox.sqlite','firefox'))
     safari_data={} 
