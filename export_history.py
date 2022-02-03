@@ -90,7 +90,7 @@ def writelist(data,html_file,name=""):
             html_file.write(Most_Common(common_domains))
             html_file.write("<H3> Sites and times</H3>")
             last_annouced_date_string="xxx"
-            for row in domain_filter(data):
+            for row in reversed(domain_filter(data)):
                 time=convert_to_time_zone(row[0])
                 time_string=time.strftime("%H:%M")
                 date_string=time.strftime("%d/%m/%y")
