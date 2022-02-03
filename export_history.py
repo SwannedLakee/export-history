@@ -43,7 +43,7 @@ def domain_filter(matches,use_blacklist=False):
         else:
                 ascii_title=""
                 if row[2]:
-                    ascii_title = row[2].encode('ascii','ignore')
+                    ascii_title = row[2]
 
                 return_me.append((row[0],"<a href=\"{}\">{}</a>".format(row[1],ascii_title)))
 
