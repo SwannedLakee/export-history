@@ -79,7 +79,7 @@ def convert_to_time_zone(time,zone='Europe/London'):
 
 
 def get_data_from_database():
-    return sorted(get_history_from_database('databases/firefox.sqlite','firefox')).reverse()
+    return sorted(get_history_from_database('databases/firefox.sqlite','firefox'))
 
 def output_data(data):
     with open("history.html","w") as html_file:
