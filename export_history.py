@@ -45,7 +45,7 @@ def domain_filter(matches,use_blacklist=False):
                 if row[2]:
                     ascii_title = row[2].encode('ascii','ignore')
 
-                return_me.append((row[0],"{} ({})".format(row[1],ascii_title)))
+                return_me.append((row[0],"<a href=\"{}\">{}</a>".format(row[1],ascii_title)))
 
     return_me2=[]
     last_row=["a","b"]
