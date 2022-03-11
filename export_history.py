@@ -68,10 +68,11 @@ def most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
 
 def recent_domains(data):
     dic_domains={}
-    for row in domain_filter(data):
+    for row in data:
         time=convert_to_time_zone(row[0])
         timestamp=time.strftime("%d/%m/%y %H:%M")
-        dic_domains[row[1]]=timestamp
+        domain=urllib.parse.urlparse(row[1])[1]
+        dic_domains[domain]=timestamp
     for key in dic_domains.keys():
         print("{}: {}".format(key,dic_domains[key]))
     return ""
