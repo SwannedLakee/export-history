@@ -71,12 +71,12 @@ def recent_domains(data):
     for row in data:
         time=convert_to_time_zone(row[0])
         timestamp=time.strftime("%d/%m/%y %H:%M")
-        domain=urllib.parse.urlparse(row[1])[1].replace("www.","").replace("mobile.","")
+        domain=urllib.parse.urlparse(row[1])[1].replace("www.","").replace("mobile.","").replace("m.","")
         dic_domains[domain]=timestamp
-    return_me=
-    for key in ['bbc.co.uk','twitter.com','facebook.com','linkedin.com']:
-        print("{}: {}".format(key,dic_domains[key]))
-    return ""
+    return_me="<h2>How long since?</h2>"
+    for key in ['bbc.co.uk','twitter.com','facebook.com','mail.google.com']:
+        return_me+="{}: {}<br>\n".format(key,dic_domains[key])
+    return return_me
 
 
 def convert_to_time_zone(time,zone='Europe/London'): 
@@ -108,9 +108,7 @@ def writelist(data,html_file,name=""):
                 if last_annouced_date_string not in date_string:
                     html_file.write("<H3>{}</H3>".format(date_string))
                     last_annouced_date_string=date_string 
-                print(date_string)
                 outstring="<li> "+time_string+" "+row[1]+"\n"
-                print(outstring)
                 html_file.write(outstring)
             html_file.write("</ul>")
 
