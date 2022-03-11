@@ -71,9 +71,10 @@ def recent_domains(data):
     for row in data:
         time=convert_to_time_zone(row[0])
         timestamp=time.strftime("%d/%m/%y %H:%M")
-        domain=urllib.parse.urlparse(row[1])[1]
+        domain=urllib.parse.urlparse(row[1])[1].replace("www.","").replace("mobile.","")
         dic_domains[domain]=timestamp
-    for key in dic_domains.keys():
+    return_me=
+    for key in ['bbc.co.uk','twitter.com','facebook.com','linkedin.com']:
         print("{}: {}".format(key,dic_domains[key]))
     return ""
 
