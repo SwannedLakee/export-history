@@ -66,8 +66,18 @@ def most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
         return_me+="<li>{} ({})</li>\n".format(row[0],row[1])
     return return_me+"</ol>"
 
-def recent_domains(lst):
-
+def recent_domains(data, domains):
+    dic_domains={}
+    for row in reversed(domain_filter(data)):
+        time=convert_to_time_zone(row[0])
+        time_string=time.strftime("%H:%M")
+        date_string=time.strftime("%d/%m/%y")
+        if last_annouced_date_string not in date_string:
+            html_file.write("<H3>{}</H3>".format(date_string))
+            last_annouced_date_string=date_string 
+        print(date_string)
+        outstring="<li> "+time_string+" "+row[1]+"\n"
+        print(outstring)
 
 
 def convert_to_time_zone(time,zone='Europe/London'): 
@@ -89,7 +99,8 @@ def output_data(data):
 def writelist(data,html_file,name=""):
             common_domains=[row[1] for row in domain_filter(data)]
             html_file.write(most_Common(common_domains))
-            html_file.write(recent_domains(common_domains))
+            domains=['facebook','twitter','bbc']
+            html_file.write(recent_domains(data,domains))
             html_file.write("<H3> Sites and times</H3>")
             last_annouced_date_string="xxx"
             for row in reversed(domain_filter(data)):
