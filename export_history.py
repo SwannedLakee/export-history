@@ -59,13 +59,14 @@ def domain_filter(matches,use_blacklist=False):
     return return_me2
 
 
-def Most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
+def most_Common(lst): #from https://stackoverflow.com/a/20872750/170243
     data = Counter(lst)
     return_me="<h3> Most common sites</h3>\nWith number of accesses/minutes in parentheses<ol>"
     for row in data.most_common()[:30]:
         return_me+="<li>{} ({})</li>\n".format(row[0],row[1])
     return return_me+"</ol>"
 
+def recent_domains(lst):
 
 
 
@@ -87,7 +88,8 @@ def output_data(data):
 
 def writelist(data,html_file,name=""):
             common_domains=[row[1] for row in domain_filter(data)]
-            html_file.write(Most_Common(common_domains))
+            html_file.write(most_Common(common_domains))
+            html_file.write(recent_domains(common_domains))
             html_file.write("<H3> Sites and times</H3>")
             last_annouced_date_string="xxx"
             for row in reversed(domain_filter(data)):
