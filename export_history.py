@@ -99,6 +99,7 @@ def output_social_checking(data):
     sociallist=open('sociallist.txt').read().split("\n")
     with open("social.html","w") as html_file:
         social=False
+        last_annouced_date_string="xxx"
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
             time_string=time.strftime("%H:%M")
