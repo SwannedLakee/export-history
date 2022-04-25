@@ -95,6 +95,17 @@ def output_data(data):
     with open("history.html","w") as html_file:
         writelist(data, html_file)
 
+def output_social_checking(data):
+    with open("social.html","w") as html_file:
+        for row in reversed(domain_filter(data)):
+            time=convert_to_time_zone(row[0])
+            time_string=time.strftime("%H:%M")
+            date_string=time.strftime("%d/%m/%y")
+            if last_annouced_date_string not in date_string:
+                html_file.write("<H3>{}</H3>".format(date_string))
+                last_annouced_date_string=date_string 
+         
+
 def writelist(data,html_file,name=""):
             common_domains=[row[1] for row in domain_filter(data)]
             html_file.write(most_Common(common_domains))
@@ -114,3 +125,4 @@ def writelist(data,html_file,name=""):
 
 if __name__=="__main__":
     output_data(get_data_from_database())
+    output_social_checking(get_data_from_database())
