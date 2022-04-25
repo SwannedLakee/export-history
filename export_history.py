@@ -100,6 +100,7 @@ def output_social_checking(data):
     with open("social.html","w") as html_file:
         social=False
         date_being_examined="xxx"
+        count=-312
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
             time_int=int(time.strftime("%H"))
@@ -108,16 +109,18 @@ def output_social_checking(data):
             if date_being_examined not in date_string:
                 if social:
                     html_file.write("<li><b>{}</b>".format(date_being_examined))
+                    count+=1
                 else:
                     html_file.write("<li>{}".format(date_being_examined))
                 #Then we have a new date
                 date_being_examined=date_string 
                 social=False
-                print("Social is now false because examining new date :"+date_string)
+#                print("Social is now false because examining new date :"+date_string)
             if row[1] in sociallist:
                 if time_int<16:
                     social=True
-                    print("Social is now true for:"+date_string+"because of "+row[1])
+#                    print("Social is now true for:"+date_string+"because of "+row[1])
+        print("There have been {} fails".format(count))
          
 
 def writelist(data,html_file,name=""):
