@@ -96,14 +96,25 @@ def output_data(data):
         writelist(data, html_file)
 
 def output_social_checking(data):
+    sociallist=open('sociallist.txt').read().split("\n")
     with open("social.html","w") as html_file:
+        social=False
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
             time_string=time.strftime("%H:%M")
             date_string=time.strftime("%d/%m/%y")
             if last_annouced_date_string not in date_string:
-                html_file.write("<H3>{}</H3>".format(date_string))
+                if social:
+                    html_file.write("<li><b>{}</b>".format(last_annouced_date_string))
+                else:
+                    html_file.write("<li>{}".format(last_annouced_date_string))
+                #Then we have a new date
+                #We print the date at the end 
                 last_annouced_date_string=date_string 
+                social=False
+            domain=urllib.parse.urlparse(row[1])[1]
+            if domain in sociallist:
+                social=True
          
 
 def writelist(data,html_file,name=""):
