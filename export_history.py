@@ -113,11 +113,11 @@ def output_social_checking(data):
                 #Then we have a new date
                 date_being_examined=date_string 
                 social=False
+                print("Social is now false because examining new date :"+date_string)
             if row[1] in sociallist:
                 if time_int<16:
                     social=True
-                    print("Y:"+row[1])
-                    print("Z:"+date_string)
+                    print("Social is now true for:"+date_string+"because of "+row[1])
          
 
 def writelist(data,html_file,name=""):
