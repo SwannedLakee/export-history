@@ -99,19 +99,19 @@ def output_social_checking(data):
     sociallist=open('sociallist.txt').read().split("\n")
     with open("social.html","w") as html_file:
         social=False
-        last_annouced_date_string="xxx"
+        date_being_examined="xxx"
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
             time_int=int(time.strftime("%H"))
             date_string=time.strftime("%d/%m/%y")
-            if last_annouced_date_string not in date_string:
+            if date_being_examined not in date_string:
                 if social:
-                    html_file.write("<li><b>{}</b>".format(last_annouced_date_string))
+                    html_file.write("<li><b>{}</b>".format(date_being_examined))
                 else:
-                    html_file.write("<li>{}".format(last_annouced_date_string))
+                    html_file.write("<li>{}".format(date_being_examined))
                 #Then we have a new date
                 #We print the date at the end 
-                last_annouced_date_string=date_string 
+                date_being_examined=date_string 
                 social=False
             domain=urllib.parse.urlparse(row[1])[1]
             if domain in sociallist:
