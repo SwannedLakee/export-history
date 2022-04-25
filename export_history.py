@@ -113,12 +113,11 @@ def output_social_checking(data):
                 #Then we have a new date
                 date_being_examined=date_string 
                 social=False
-            domain=urllib.parse.urlparse(row[1])[1]
-            if domain in sociallist:
+            if row[1] in sociallist:
                 if time_int<16:
                     social=True
-                    print(domain)
-                    print(date_string)
+                    print("Y:"+row[1])
+                    print("Z:"+date_string)
          
 
 def writelist(data,html_file,name=""):
