@@ -108,7 +108,7 @@ def output_social_checking(data):
             #We print the date at the end 
             if date_being_examined not in date_string:
                 if social:
-                    html_file.write("<li><b>{}</b>".format(date_being_examined))
+                    html_file.write("<li><b>{} - {}</b>".format(date_being_examined, time.strftime("%H:%M")))
                     count+=1
                 else:
                     html_file.write("<li>{}".format(date_being_examined))
