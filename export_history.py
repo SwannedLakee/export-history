@@ -102,7 +102,7 @@ def output_social_checking(data):
         last_annouced_date_string="xxx"
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
-            time_string=time.strftime("%H:%M")
+            time_int=int(time.strftime("%H"))
             date_string=time.strftime("%d/%m/%y")
             if last_annouced_date_string not in date_string:
                 if social:
@@ -115,7 +115,8 @@ def output_social_checking(data):
                 social=False
             domain=urllib.parse.urlparse(row[1])[1]
             if domain in sociallist:
-                social=True
+                if time_int<16:
+                    social=True
          
 
 def writelist(data,html_file,name=""):
