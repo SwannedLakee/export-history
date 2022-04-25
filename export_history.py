@@ -104,19 +104,21 @@ def output_social_checking(data):
             time=convert_to_time_zone(row[0])
             time_int=int(time.strftime("%H"))
             date_string=time.strftime("%d/%m/%y")
+            #We print the date at the end 
             if date_being_examined not in date_string:
                 if social:
                     html_file.write("<li><b>{}</b>".format(date_being_examined))
                 else:
                     html_file.write("<li>{}".format(date_being_examined))
                 #Then we have a new date
-                #We print the date at the end 
                 date_being_examined=date_string 
                 social=False
             domain=urllib.parse.urlparse(row[1])[1]
             if domain in sociallist:
                 if time_int<16:
                     social=True
+                    print(domain)
+                    print(date_string)
          
 
 def writelist(data,html_file,name=""):
