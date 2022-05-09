@@ -101,6 +101,8 @@ def output_social_checking(data):
         social=False
         date_being_examined="xxx"
         count=-312
+        social_time="xxx"
+        
         for row in reversed(domain_filter(data)):
             time=convert_to_time_zone(row[0])
             time_int=int(time.strftime("%H"))
@@ -109,9 +111,10 @@ def output_social_checking(data):
             if row[1] in sociallist:
                 if time_int<16:
                     social=True
+                    social_time=time
             if date_being_examined not in date_string:
                 if social:
-                    html_file.write("<li><b>{} - {}</b>".format(date_being_examined, time.strftime("%H:%M")))
+                    html_file.write("<li><b>{} - {}</b>".format(date_being_examined, social_time)))
                     count+=1
                 else:
                     html_file.write("<li>{}".format(date_being_examined))
