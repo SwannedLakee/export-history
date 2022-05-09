@@ -106,6 +106,9 @@ def output_social_checking(data):
             time_int=int(time.strftime("%H"))
             date_string=time.strftime("%d/%m/%y")
             #We print the date at the end 
+            if row[1] in sociallist:
+                if time_int<16:
+                    social=True
             if date_being_examined not in date_string:
                 if social:
                     html_file.write("<li><b>{} - {}</b>".format(date_being_examined, time.strftime("%H:%M")))
@@ -115,11 +118,6 @@ def output_social_checking(data):
                 #Then we have a new date
                 date_being_examined=date_string 
                 social=False
-#                print("Social is now false because examining new date :"+date_string)
-            if row[1] in sociallist:
-                if time_int<16:
-                    social=True
-#                    print("Social is now true for:"+date_string+"because of "+row[1])
         print("There have been {} fails".format(count))
          
 
