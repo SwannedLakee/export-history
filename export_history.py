@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import urllib.parse
+import time
 import sqlite3
 import datetime
 import urllib.request, urllib.parse, urllib.error
@@ -95,35 +96,6 @@ def output_data(data):
     with open("history.html","w") as html_file:
         writelist(data, html_file)
 
-def output_social_checking(data):
-    sociallist=open('sociallist.txt').read().split("\n")
-    with open("social.html","w") as html_file:
-        social=False
-        date_being_examined="xxx"
-        count=-312
-        social_time="xxx"
-        
-        for row in reversed(domain_filter(data)):
-            time=convert_to_time_zone(row[0])
-            #We print the date at the end 
-            if row[1] in sociallist:
-                time_int=int(time.strftime("%H"))
-                if time_int<16:
-                    social=True
-                    social_time=time
-            date_string=time.strftime("%d/%m/%y")
-            if date_being_examined not in date_string:
-                if social:
-                    html_file.write("<li><b>{} - {}</b>".format(date_being_examined, social_time))
-                    count+=1
-                else:
-                    html_file.write("<li>{}".format(date_being_examined))
-                #Then we have a new date
-                date_being_examined=date_string 
-                social=False
-        print("There have been {} fails".format(count))
-         
-
 class Visit:
 
     def __init__(self, row):
@@ -132,6 +104,10 @@ class Visit:
         self.date_string=self.time.strftime("%d/%m/%y")
         self.location=row[1]
         
+    @property 
+    def seconds(self):
+        return time.mktime(self.time.timetuple())
+
     @property 
     def html_out(self):
         return "<li> "+self.time_string+" "+self.location+"\n"
@@ -145,16 +121,21 @@ def writelist(data,html_file,name=""):
             html_file.write(most_Common(common_domains))
             html_file.write(recent_domains(data))
             html_file.write("<H3> Sites and times</H3>")
-            last_annouced_date_string="xxx"
-            for row in reversed(domain_filter(data)):
+            data=domain_filter(data)
+            last_vis=Visit(data[0])
+            html_file.write("<ul>")
+            for row in reversed(data):
                 vis=Visit(row)
-                print(vis)
-                if last_annouced_date_string not in vis.date_string:
+                delta=last_vis.seconds-vis.seconds
+
+#                 print("The time between {} and {} is {}".format(last_vis.time_string,vis.time_string,delta))
+                if last_vis.date_string not in vis.date_string:
                     html_file.write("<H3>{}</H3>".format(vis.date_string))
-                    last_annouced_date_string=vis.date_string 
+                if delta>1800:
+                    html_file.write("</ul><br><ul>")
+                last_vis=vis
                 html_file.write(vis.html_out)
             html_file.write("</ul>")
 
 if __name__=="__main__":
     output_data(get_data_from_database())
-    output_social_checking(get_data_from_database())
