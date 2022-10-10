@@ -124,6 +124,22 @@ def output_social_checking(data):
         print("There have been {} fails".format(count))
          
 
+class Visit:
+
+    def __init__(self, row):
+        self.time=convert_to_time_zone(row[0])
+        self.time_string=self.time.strftime("%H:%M")
+        self.date_string=self.time.strftime("%d/%m/%y")
+        self.location=row[1]
+        
+    @property 
+    def html_out(self):
+        return "<li> "+self.time_string+" "+self.location+"\n"
+
+    def __str__(self):
+        return "{} {} - {}".format(self.date_string,self.time_string,self.location)
+ 
+
 def writelist(data,html_file,name=""):
             common_domains=[row[1] for row in domain_filter(data)]
             html_file.write(most_Common(common_domains))
@@ -131,14 +147,12 @@ def writelist(data,html_file,name=""):
             html_file.write("<H3> Sites and times</H3>")
             last_annouced_date_string="xxx"
             for row in reversed(domain_filter(data)):
-                time=convert_to_time_zone(row[0])
-                time_string=time.strftime("%H:%M")
-                date_string=time.strftime("%d/%m/%y")
-                if last_annouced_date_string not in date_string:
-                    html_file.write("<H3>{}</H3>".format(date_string))
-                    last_annouced_date_string=date_string 
-                outstring="<li> "+time_string+" "+row[1]+"\n"
-                html_file.write(outstring)
+                vis=Visit(row)
+                print(vis)
+                if last_annouced_date_string not in vis.date_string:
+                    html_file.write("<H3>{}</H3>".format(vis.date_string))
+                    last_annouced_date_string=vis.date_string 
+                html_file.write(vis.html_out)
             html_file.write("</ul>")
 
 if __name__=="__main__":
