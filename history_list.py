@@ -15,11 +15,11 @@ def main(entry):
     end=entry.end_epoch()*1000000
     return_me=[]
     data=export_history.get_history_from_database('databases/firefox.sqlite',"firefox",begin,end) 
-    for line in export_history.domain_filter(data,True):
+    for line in export_history.domain_filter(data,True,False):
             time=export_history.convert_to_time_zone(line[0])
             time_string=time.strftime("%H:%M")
             location=line[1].replace("https://","")
-            string="{}, {}".format(time_string,location)
+            string="{}, {}".format(time_string,location.split('?')[0])
             return_me.append(string)
     return return_me
 

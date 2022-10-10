@@ -25,7 +25,7 @@ def get_history_from_database(filename, browser="firefox", start=0,end=0):
 def filter_by_date(matches, text): 
     return [x for x in matches if str(text) in str(x[0])]
 
-def domain_filter(matches,use_blacklist=False):
+def domain_filter(matches,use_blacklist=False,html=True):
     return_me=[]
     whitelist=open('whitelist.txt').read().split("\n")
     blacklist=open('blacklist.txt').read().split("\n")
@@ -45,8 +45,11 @@ def domain_filter(matches,use_blacklist=False):
                 ascii_title=""
                 if row[2]:
                     ascii_title = row[2]
-
-                return_me.append((row[0],"<a href=\"{}\">{}</a>".format(row[1],ascii_title)))
+                if html:
+                    return_me.append((row[0],"<a href=\"{}\">{}</a>".format(row[1],ascii_title)))
+                else:
+                    return_me.append((row[0],"{} {}".format(row[1],ascii_title)))
+                    
 
     return_me2=[]
     last_row=["a","b"]
