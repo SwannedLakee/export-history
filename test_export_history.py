@@ -8,7 +8,7 @@ def get_content(infilename):
 
 class historyTest(unittest.TestCase):
 
-    def test_hello(self):
+    def test_hello(self)
         data=sorted(export_history.get_history_from_database('1k2elc2y.Test/places.sqlite','firefox'))
         print(data)
         self.assertTrue("11:35" in data[0][0])
