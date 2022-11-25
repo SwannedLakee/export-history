@@ -5,7 +5,7 @@
 ul {
 list-style: none;
 }
-li {
+ul>li {
 /* Most of this from https://dev.to/peterc/how-to-create-joined-bulletpoint-lists-with-css-bbc-news-style-1eem */
   /* You need to turn on relative positioning so the line is placed relative to the item rather than absolutely on the page */
   position: relative;
@@ -16,18 +16,18 @@ li {
   padding-left: 20px;
 }
 
-li:before {
+li.same:before {
   background-color: #c00;
   width: 2px;
   content: '';
   position: absolute;
-  top: 5px;
+  top: -1.7em;
   bottom: 0px;
   left: 5px;
-  height:2.5em;
+  height:2.4em;
 }
 
-li:last-child:before {
+li:first-child:before {
   background-color: white;
 }
 
@@ -46,7 +46,9 @@ li::after {
 
 
 </style>
-This is Joe's Public Internet histroy! 
+
+
+<h1>Joe's Public Internet history!</h1>
 
 <p>You can see the code I use <a href="https://github.com/joereddington/export-histort">on github</a>, and there's <a href="https://joereddington.github.io/2018/12/12/Internet.html"> a blog post that talks about the reasons</a>.</p>
 

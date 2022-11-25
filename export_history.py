@@ -111,9 +111,12 @@ class Visit:
     def seconds(self):
         return time.mktime(self.time.timetuple())
 
-    @property 
-    def html_out(self):
-        return "<li> "+self.time_string+" "+self.location+"\n"
+    def html_out(self,last_vis):
+        if (last_vis.location == self.location):
+            return "<li class='same'> "+self.time_string+" "+self.location+"\n"
+        else:
+            return "<li> "+self.time_string+" "+self.location+"\n"
+
 
     def __str__(self):
         return "{} {} - {}".format(self.date_string,self.time_string,self.location)
@@ -140,8 +143,9 @@ def writelist(data,html_file,name=""):
                     html_file.write("</ul><H3>{}, {}</H3><br><ul>".format(vis.weekday,vis.date_string))
                 if delta>1800:
                     html_file.write("</ul><br><ul>")
+                to_write=vis.html_out(last_vis)
+                html_file.write(to_write)
                 last_vis=vis
-                html_file.write(vis.html_out)
             html_file.write("</ul>")
 
 if __name__=="__main__":
