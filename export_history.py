@@ -137,7 +137,7 @@ def writelist(data,html_file,name=""):
 
 #                 print("The time between {} and {} is {}".format(last_vis.time_string,vis.time_string,delta))
                 if last_vis.date_string not in vis.date_string:
-                    html_file.write("<H3>{}, {}</H3>".format(vis.weekday,vis.date_string))
+                    html_file.write("</ul><H3>{}, {}</H3><br><ul>".format(vis.weekday,vis.date_string))
                 if delta>1800:
                     html_file.write("</ul><br><ul>")
                 last_vis=vis
