@@ -129,8 +129,8 @@ class Visit:
 def writelist(data,html_file,name=""):
             common_domains=[row[1] for row in domain_filter(data)]
             html_file.write(most_Common(common_domains))
-            html_file.write(recent_domains(data))
-            html_file.write("<H3> Sites and times</H3>")
+#            html_file.write(recent_domains(data))
+            html_file.write("<H2> Sites and times</H2>")
             data=domain_filter(data)
             last_vis=Visit(data[0])
             html_file.write("<ul>")
